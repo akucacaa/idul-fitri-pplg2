@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Idul Fitri 1447 H - XI PPLG 2</title>
+    
+    <!-- FAVICON LOGO -->
+    <link rel="icon" type="image/png" href="logo.jpeg" />
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Outfit:wght@300;400;500;600;700&family=Space+Mono&display=swap" rel="stylesheet">
+    
+    <!-- Firebase -->
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-database-compat.js"></script>
+
+    <style>
+        :root {
+            --bg-base: #050a07;
+            --gold-main: #e6b84a;
+            --gold-light: #f8e4a0;
+            --green-dark: #0a1f13;
+            --green-accent: #1d4a2c;
+            --text-main: #ffffff;
+            --text-muted: #a3b8a9;
+            --tech-cyan: #00f3ff;
+            --crescent-gold: #f4d03f;
+            --crescent-glow: #ffe066;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background-color: var(--bg-base);
+            color: var(--text-main);
+            overflow-x: hidden;
+            min-height: 100vh;
+        }
+
+        .font-amiri { font-family: 'Amiri', serif; }
+        .font-mono { font-family: 'Space Mono', monospace; }
+
+     /* --- LAMPU GANTUNG & BENTUK NEON PPLG --- */
+.lampu-zone {
+  position: absolute;
+  top: 10%; left: 5%;
+  width: 90%; height: 80px;
+  z-index: 6;
+  pointer-events: none;
+  display: flex; justify-content: space-between; flex-wrap: nowrap; gap: 30px;
+  opacity: 0.9;
+}
+
+.lampu-gantung-decor {
+  display: flex; flex-direction: column; align-items: center; gap: 2px;
+}
+
+.lampu-bulb {
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #00f3ff;
+  box-shadow: 0 0 8px #00f3ff, 0 0 15px rgba(0, 243, 255, 0.3);
+  animation: flicker 1.2s ease-in-out infinite alternate;
+}
+
+/* Bentuk kotak LED (like mini monitor) */
+.lampu-box {
+  width: 16px; height: 10px;
+  background: #00f3ff;
+  border-radius: 2px;
+  box-shadow: 0 0 8px #00f3ff, 0 0 15px rgba(0, 243, 255, 0.3);
+  animation: flicker 1.8s ease-in-out infinite alternate;
+}
+
+/* Bentuk bulat besar neon khas */
+.lampu-neon {
+  width: 10px; height: 10px;
+  border-radius: 50%;
+  background: #f4d03f;
+  box-shadow: 0 0 12px #f4d03f, 0 0 20px rgba(244, 208, 63, 0.5);
+  animation: flicker 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes flicker {
+  0% { opacity: 0.7; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.15); }
+  100% { opacity: 0.8; transform: scale(1); }
+}
+
+
+
+        /* --- BACKGROUND STICKY --- */
+        .bg-wrapper { position: fixed; inset: 0; z-index: 0; overflow: hidden; }
+        .bg-img {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+            object-fit: cover; object-position: center; opacity: 0;
+            transition: opacity 1.5s ease-in-out;
+            filter: brightness(0.4) blur(1.5px) contrast(1.1);
+        }
+        .bg-img.active { opacity: 1; z-index: 1; }
+
+        .overlay-gradient {
+            position: fixed; inset: 0; z-index: 2;
+            background: 
+                radial-gradient(circle at 50% 20%, rgba(244, 208, 63, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 30% 80%, rgba(29, 74, 44, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 70% 60%, rgba(230, 184, 74, 0.15) 0%, transparent 50%),
+                radial-gradient(circle at 50% 30%, rgba(10, 31, 19, 0.85) 0%, rgba(5, 10, 7, 0.98) 90%);
+            pointer-events: none;
+        }
+
+        /* --- ORNAMENT TECH PARTICLES + BULAN KECIL --- */
+        .tech-nodes {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 4; pointer-events: none; overflow: hidden;
+        }
+
+        .floating-crescent {
+            position: absolute; width: 12px; height: 6px;
+            background: var(--crescent-gold); border-radius: 50% 50% 45% 55% / 60% 60% 40% 40%;
+            opacity: 0.5; animation: floatCrescent linear infinite;
+            filter: drop-shadow(0 0 4px var(--crescent-glow));
+        }
+
+        .floating-crescent::before {
+            content: ''; position: absolute; top: -1px; left: -2px;
+            width: 8px; height: 8px; border: 1px solid var(--crescent-gold);
+            border-radius: 50%; clip-path: polygon(0 0, 100% 0, 100% 100%);
+        }
+
+        @keyframes floatCrescent {
+            0% { transform: translateY(100vh) rotate(0deg) scale(0); opacity: 0; }
+            20% { opacity: 0.6; }
+            100% { transform: translateY(-20vh) rotate(360deg) scale(1); opacity: 0; }
+        }
+
+        .node {
+            position: absolute; width: 4px; height: 4px;
+            background: var(--tech-cyan); border-radius: 50%;
+            box-shadow: 0 0 8px var(--tech-cyan); opacity: 0.5;
+            animation: floatNode linear infinite;
+        }
+
+        @keyframes floatNode {
+            0% { transform: translateY(100vh) scale(0); opacity: 0; }
+            20% { opacity: 0.6; }
+            100% { transform: translateY(-10vh) scale(1); opacity: 0; }
+        }
+
+        /* --- JUDUL SHINE ISLAMIC --- */
+        .title-shine {
+            color: var(--gold-main);
+            background: linear-gradient(45deg, #bf953f, #f4d03f, #e6b84a, #ffe066, #d4ac26);
+            -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+            background-size: 300% auto; animation: shineIslamic 6s ease infinite;
+            position: relative;
+        }
+
+        .title-shine::after {
+            content: ''; position: absolute; bottom: -10px; left: 50%;
+            transform: translateX(-50%); width: 60px; height: 2px;
+            background: linear-gradient(90deg, transparent, var(--gold-main), transparent);
+        }
+
+        @keyframes shineIslamic {
+            0%, 100% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+        }
+
+        /* --- MARQUEE UCAPAN LENGKAP --- */
+        .marquee-container { 
+            position: fixed; bottom: 0; left: 0; width: 100%; 
+            background: linear-gradient(90deg, rgba(10, 31, 19, 0.95), rgba(244, 208, 63, 0.15), rgba(10, 31, 19, 0.95)); 
+            padding: 12px 0; z-index: 20; border-top: 2px solid rgba(244, 208, 63, 0.4); 
+            backdrop-filter: blur(8px); overflow: hidden; 
+        }
+        .marquee-text { 
+            display: inline-block; white-space: nowrap; 
+            animation: marquee 25s linear infinite; 
+            color: var(--gold-light); font-family: 'Amiri', serif; 
+            font-size: 1.2rem; font-weight: 500;
+            text-shadow: 0 0 10px rgba(244, 208, 63, 0.5);
+        }
+        @keyframes marquee { 
+            0% { transform: translateX(100%); } 
+            100% { transform: translateX(-100%); } 
+        }
+
+        /* --- KARTU UCAPAN PREMIUM --- */
+        .wish-card { 
+            background: linear-gradient(145deg, rgba(10, 31, 19, 0.8), rgba(29, 74, 44, 0.6));
+            border-left: 4px solid var(--crescent-gold); padding: 1.5rem; 
+            margin-bottom: 1.5rem; border-radius: 0 20px 20px 0; 
+            transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            position: relative; overflow: hidden;
+        }
+        .wish-card::before {
+            content: '✦'; position: absolute; top: 10px; right: 15px;
+            color: var(--crescent-gold); font-size: 1.2rem; opacity: 0.5;
+        }
+        .wish-card:hover { 
+            transform: translateY(-8px) scale(1.02); 
+            box-shadow: 0 20px 40px rgba(244, 208, 63, 0.2);
+            background: linear-gradient(145deg, rgba(20, 50, 35, 0.9), rgba(44, 90, 62, 0.7));
+            border-left-color: var(--crescent-glow);
+        }
+
+        /* --- PARTIKEL BULAN & BINTANG --- */
+        .particle { 
+            position: fixed; pointer-events: none; z-index: 3; 
+            border-radius: 50%; opacity: 0; animation: floatUp linear infinite; 
+        }
+        .gold-particle { background: var(--crescent-gold); }
+        .star-particle {
+            width: 6px; height: 6px; clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+        }
+        @keyframes floatUp { 
+            0% { transform: translateY(100vh) scale(0) rotate(0deg); opacity: 0; } 
+            20% { opacity: 0.9; } 
+            100% { transform: translateY(-30vh) scale(1) rotate(720deg); opacity: 0; } 
+        }
+
+        /* --- KONTEN UTAMA --- */
+        .main-content { position: relative; z-index: 10; padding-bottom: 70px; }
+        .hero { 
+            min-height: 100vh; display: flex; flex-direction: column; 
+            justify-content: center; align-items: center; text-align: center; 
+            padding: 2rem; position: relative; 
+        }
+        
+        .fade-in { opacity: 0; transform: translateY(40px); animation: fadeInUp 1.2s ease forwards; }
+        .delay-1 { animation-delay: 0.4s; } .delay-2 { animation-delay: 0.8s; } 
+        .delay-3 { animation-delay: 1.2s; } .delay-4 { animation-delay: 1.6s; }
+        @keyframes fadeInUp { to { opacity: 1; transform: translateY(0); } }
+
+        .sub-title { 
+            font-size: clamp(1.3rem, 3.5vw, 2rem); color: var(--text-main); 
+            margin-bottom: 2.5rem; font-weight: 300; 
+            text-shadow: 0 0 20px rgba(244, 208, 63, 0.3);
+        }
+        .year-badge { 
+            display: inline-block; padding: 1rem 2.5rem; 
+            border: 2px solid var(--crescent-gold); color: var(--crescent-gold); 
+            border-radius: 50px; font-size: 1.2rem; letter-spacing: 3px; 
+            margin-bottom: 2.5rem; background: rgba(244, 208, 63, 0.08); 
+            backdrop-filter: blur(10px); font-weight: 500;
+            box-shadow: 0 0 20px rgba(244, 208, 63, 0.2);
+        }
+        .class-title { 
+            font-size: clamp(1.8rem, 5vw, 2.5rem); font-weight: 800; 
+            color: white; text-transform: uppercase; letter-spacing: 4px;
+            background: linear-gradient(45deg, var(--crescent-gold), white);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        section { padding: 6rem 1.5rem; max-width: 1000px; margin: 0 auto; }
+        .section-header { text-align: center; margin-bottom: 4rem; }
+        .section-title { 
+            font-size: 2.5rem; color: var(--crescent-gold); 
+            display: inline-block; padding-bottom: 15px; 
+            border-bottom: 3px solid rgba(244, 208, 63, 0.4);
+            position: relative;
+        }
+        .section-title::after {
+            content: '✦'; position: absolute; bottom: -5px; left: 50%;
+            transform: translateX(-50%); font-size: 1.2rem; opacity: 0.7;
+        }
+
+        .glass-box { 
+            background: rgba(10, 31, 19, 0.7); 
+            border: 1px solid rgba(244, 208, 63, 0.25); 
+            backdrop-filter: blur(15px); border-radius: 25px; 
+            padding: 2.5rem; box-shadow: 0 15px 50px rgba(0,0,0,0.4); 
+            transition: all 0.4s ease; 
+        }
+        .glass-box:hover { 
+            transform: translateY(-8px); 
+            border-color: rgba(244, 208, 63, 0.5);
+            box-shadow: 0 25px 60px rgba(244, 208, 63, 0.15);
+        }
+
+        /* --- BAGIAN THR PREMIUM --- */
+        .thr-container {
+            position: relative;
+            background: linear-gradient(160deg, rgba(29, 74, 44, 0.9), rgba(10, 31, 19, 0.95));
+            border: 3px solid var(--crescent-gold);
+            border-radius: 30px;
+            padding: 3rem 2rem;
+            text-align: center;
+            box-shadow: 0 0 50px rgba(244, 208, 63, 0.25);
+            overflow: hidden;
+            position: relative;
+        }
+
+        .thr-container::before, .thr-container::after {
+            content: ''; position: absolute; left: 50%; transform: translateX(-50%);
+            width: 70%; height: 2px; background: linear-gradient(90deg, transparent, var(--crescent-gold), transparent);
+        }
+        .thr-container::before { top: 15px; }
+        .thr-container::after { bottom: 15px; }
+
+        .thr-container::after {
+            content: '🌙'; position: absolute; top: 20px; right: 20px;
+            font-size: 1.5rem; opacity: 0.3; animation: floatGentle 3s ease-in-out infinite;
+        }
+
+        @keyframes floatGentle {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .rolling-wishes {
+            height: 50px; overflow: hidden; margin-bottom: 2rem; position: relative;
+        }
+        
+        .rolling-wishes p {
+            display: block; height: 50px; line-height: 50px; text-align: center;
+            animation: rollText 8s ease-in-out infinite;
+            color: var(--gold-light); font-weight: 600; font-size: 1.1rem;
+            text-shadow: 0 0 10px rgba(244, 208, 63, 0.5);
+        }
+
+        @keyframes rollText {
+            0%, 25% { transform: translateY(0); }
+            33%, 58% { transform: translateY(-50px); }
+            66%, 91% { transform: translateY(-100px); }
+            100% { transform: translateY(-150px); }
+        }
+
+        .thr-title {
+            font-size: 3rem; font-weight: 800; color: white;
+            margin-bottom: 0.8rem; text-shadow: 0 3px 8px rgba(0,0,0,0.7);
+            background: linear-gradient(45deg, var(--crescent-gold), white);
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        }
+
+        .thr-subtitle {
+            font-size: 1.1rem; color: var(--gold-light); margin-bottom: 2rem;
+            font-family: 'Space Mono', monospace; letter-spacing: 2px;
+        }
+
+        .dana-box {
+            background: rgba(0,0,0,0.4); border: 2px solid var(--crescent-gold);
+            border-radius: 20px; padding: 1.2rem; display: inline-flex;
+            align-items: center; gap: 15px; margin-bottom: 2rem;
+            box-shadow: 0 10px 30px rgba(244, 208, 63, 0.15);
+        }
+
+        .dana-number {
+            font-family: 'Space Mono', monospace; font-size: 1.4rem;
+            color: white; letter-spacing: 2px; font-weight: 600;
+        }
+
+        .copy-btn {
+            background: linear-gradient(135deg, var(--crescent-gold), var(--crescent-glow));
+            color: var(--bg-base); border: none; padding: 0.7rem 1.2rem;
+            border-radius: 12px; font-weight: 700; cursor: pointer;
+            transition: all 0.3s ease; box-shadow: 0 5px 15px rgba(244, 208, 63, 0.3);
+        }
+
+        .copy-btn:hover { transform: translateY(-2px); box-shadow: 0 8px 25px rgba(244, 208, 63, 0.4); }
+        .copy-btn:active { transform: scale(0.95); }
+
+        /* Toast Notification Premium */
+        .toast {
+            position: fixed; bottom: 90px; left: 50%; transform: translateX(-50%) translateY(100px);
+            background: linear-gradient(135deg, var(--crescent-gold), var(--crescent-glow));
+            color: var(--bg-base); padding: 1rem 2rem; border-radius: 50px;
+            font-weight: 700; box-shadow: 0 10px 30px rgba(244, 208, 63, 0.4);
+            opacity: 0; transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+            z-index: 100; border: 2px solid rgba(255,255,255,0.2);
+        }
+        .toast.show { transform: translateX(-50%) translateY(0); opacity: 1; }
+
+        /* --- FORM & FOOTER PREMIUM --- */
+        .form-input { 
+            width: 100%; padding: 1.2rem; margin-bottom: 1.5rem; 
+            background: rgba(0,0,0,0.4); border: 2px solid rgba(244, 208, 63, 0.2);
+            border-radius: 15px; color: white; font-family: inherit;
+            transition: all 0.3s ease; font-size: 1rem;
+        }
+        .form-input:focus { 
+            outline: none; border-color: var(--crescent-gold); 
+            background: rgba(0,0,0,0.6); box-shadow: 0 0 20px rgba(244, 208, 63, 0.2);
+        }
+        .btn-submit { 
+            width: 100%; padding: 1.3rem; 
+            background: linear-gradient(135deg, var(--green-accent), var(--green-dark)); 
+            border: 2px solid var(--crescent-gold); color: var(--crescent-gold); 
+            font-weight: 700; border-radius: 15px; cursor: pointer; 
+            transition: all 0.4s ease; font-size: 1.1rem; text-transform: uppercase;
+            letter-spacing: 1px; box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .btn-submit:hover { 
+            background: linear-gradient(135deg, var(--crescent-gold), var(--crescent-glow)); 
+            color: var(--bg-base); transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(244, 208, 63, 0.3);
+        }
+
+        .wish-author { 
+            color: var(--crescent-glow); font-weight: 700; margin-bottom: 0.5rem; 
+            font-size: 1.1rem; letter-spacing: 1px;
+        }
+        .wish-text { 
+            color: var(--text-muted); font-size: 1rem; line-height: 1.7; 
+        }
+        
+        .spinner { 
+            width: 50px; height: 50px; border: 5px solid rgba(244, 208, 63, 0.2); 
+            border-top-color: var(--crescent-gold); border-radius: 50%; 
+            animation: spin 1s linear infinite; margin: 3rem auto; 
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+
+        footer { 
+            text-align: center; padding: 4rem 1rem; 
+            border-top: 2px solid rgba(244, 208, 63, 0.1); 
+            color: var(--text-muted); font-size: 1rem; 
+            background: rgba(10, 31, 19, 0.3); backdrop-filter: blur(10px);
+        }
+
+        .reveal { opacity: 0; transform: translateY(60px); transition: all 1s ease; }
+        .reveal.active { opacity: 1; transform: translateY(0); }
+
+        /* --- CONFETTI (SHOOTING UPWARD AND SPREADING) --- */
+.confetti-piece {
+    position: absolute;
+    width: 8px; height: 8px;
+    border-radius: 50%;
+    opacity: 0.9; 
+    animation: confetti-spread 2s ease-in-out forwards;
+}
+
+@keyframes confetti-spread {
+    0% {
+        transform: translateY(0) translateX(0);
+        opacity: 1;
+    }
+    50% {
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(-200px) translateX(var(--spread-x));
+        opacity: 0;
+    }
+}
+
+.confetti-piece {
+    transform: scale(0.5);
+}
+
+@keyframes confetti-spread {
+    0% {
+        transform: scale(0.5) translateY(0) translateX(0);
+        opacity: 0.5;
+    }
+    20% {
+        transform: scale(1.2) translateY(-100px) translateX(var(--spread-x));
+        opacity: 1;
+    }
+    100% {
+        transform: scale(0.8) translateY(-200px) translateX(var(--spread-x));
+        opacity: 0;
+    }
+}
+
+
+    </style>
+</head>
+<body>
+
+     <!-- LAMPU GANTUNG LEBIH KHAS PPLG (TEKNO / NEON) -->
+<div class="lampu-zone">
+  <!-- Lampu kiri -->
+  <div class="lampu-gantung-decor">
+    <div class="flex gap-1">
+      <div class="lampu-bulb"></div>
+      <div class="lampu-box"></div>
+      <div class="lampu-bulb"></div>
+    </div>
+  </div>
+
+  <!-- Tengah kiri (neon khas) -->
+  <div class="lampu-gantung-decor">
+    <div class="lampu-neon"></div>
+  </div>
+
+  <!-- Tengah (sedikit neon) -->
+  <div class="lampu-gantung-decor">
+    <div class="lampu-neon"></div>
+  </div>
+
+  <!-- Tengah kanan (neon khas) -->
+  <div class="lampu-gantung-decor">
+    <div class="lampu-neon"></div>
+  </div>
+
+  <!-- Lampu kanan -->
+  <div class="lampu-gantung-decor">
+    <div class="flex gap-1">
+      <div class="lampu-box"></div>
+      <div class="lampu-bulb"></div>
+      <div class="lampu-box"></div>
+    </div>
+  </div>
+</div>
+
+
+    <!-- ORNAMENT BULAN SABIT & TECH NODES -->
+    <div class="tech-nodes" id="techNodes">
+        <!-- Diisi oleh JavaScript -->
+    </div>
+
+    <!-- BACKGROUND FOTO -->
+    <div class="bg-wrapper" id="bgWrapper">
+        <img class="bg-img active" src="1.jpeg" alt="Bg 1">
+        <img class="bg-img" src="2.jpeg" alt="Bg 2">
+        <img class="bg-img" src="3.jpeg" alt="Bg 3">
+        <img class="bg-img" src="4.jpeg" alt="Bg 4">
+    </div>
+
+    <div class="overlay-gradient"></div>
+    <div id="particles"></div>
+
+    <!-- RUNNING TEXT LENGKAP -->
+    <div class="marquee-container">
+        <div class="marquee-text">
+            🌙 Selamat Hari Raya Idul Fitri 1447 H &bull; Minal 'Aidin wal-Fa'izin &bull; Mohon Maaf Lahir dan Batin &bull; Taqabbalallahu Minna Wa Minkum &bull; Maafkan Kami Atas Segala Kesalahan &bull; XI PPLG 2 / PIXELG 2 &bull; Selamat Hari Lebaran 🌟 &bull;
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="toast" class="toast">✨ Nomor Berhasil Disalin! ✨</div>
+
+    <!-- MAIN CONTENT -->
+    <div class="main-content">
+        
+        <!-- HERO -->
+<section class="hero" id="section-hero">
+    <div class="flex justify-center mb-6">
+        <img src="bulan.png" alt="Bulan Sabit" class="w-45 h-20 object-contain">
+    </div>
+
+    <h1 class="font-amiri title-shine fade-in delay-2" style="font-size: clamp(2.5rem, 7vw, 4.5rem); text-shadow: 0 0 50px rgba(244, 208, 63, 0.4); margin-bottom: 1.5rem;">
+        Minal 'Aidin wal-Fa'izin
+    </h1>
+    <p class="sub-title font-amiri fade-in delay-2">Mohon Maaf Lahir dan Batin 🌙</p>
+    
+    <div class="fade-in delay-3">
+    <div class="year-badge" id="yearBadge" style="cursor: pointer;">
+        1447 H
+    </div>
+</div>
+
+    <div class="fade-in delay-4">
+        <h2 class="class-title">XI PPLG 2</h2>
+        <p style="color: var(--text-muted); margin-top: 1rem; letter-spacing: 2px; font-size: 1.1rem;">Pengembangan Perangkat Lunak dan Gim</p>
+    </div>
+</section>
+
+<!-- CONFETTI CONTAINER -->
+<div id="confettiContainer" style="position: fixed; top: 0; left: 0; width: 100%; height: 100vh; pointer-events: none; z-index: 21;"></div>
+
+
+        <!-- PESAN -->
+        <section class="reveal" id="section-message">
+            <div class="glass-box" style="text-align: center;">
+                <p style="font-size: 1.2rem; line-height: 1.9; color: #f0f0f0;">
+                    <span style="color: var(--crescent-gold); font-weight: 700; font-size: 1.4rem;">Assalamualaikum Warahmatullahi Wabarakatuh</span><br><br>
+                    Taqabbalallahu minna wa minkum. Di hari yang suci ini, kami dari <strong>Kelas XI PPLG 2</strong> mengucapkan Selamat Hari Raya Idul Fitri 1447 H. 🌙<br><br>
+                    Semoga Allah SWT menerima amal ibadah kita semua dan menjadikan kita orang-orang yang kembali fitrah dengan hati yang bersih.
+                </p>
+            </div>
+        </section>
+
+        <!-- THR SECTION -->
+        <section class="reveal" id="section-thr">
+            <div class="section-header">
+                <h2 class="section-title font-amiri">Tenda THR</h2>
+                <p style="color: var(--text-muted); margin-top: 15px; font-family: 'Space Mono';">// DIGITAL_ENVELOPE_1447H</p>
+            </div>
+            
+            <div class="thr-container">
+                <div class="rolling-wishes">
+                    <p>🌙Beli sepatu buat Idul Fitri,</p>
+                    <p>belilah di toko Bu Puji.</p>
+                    <p>Bapak Ibu yang baik hati, 😇</p>
+                    <p>THR-nya dong buat kita yang imut ini.❤️</p>
+                </div>
+
+                <div class="thr-title">#IZINNN🫷🏻</div>
+                <div class="thr-subtitle">AMPLOP DIGITAL 1447 H</div>
+
+                <div class="flex flex-col items-center gap-4">
+    <p class="text-crescent-gold font-space-mono text-sm uppercase tracking-[2px]">
+        Scan atau salin nomor
+    </p>
+
+    <!-- BARCODE / QR -->
+    <div class="bg-white p-4 rounded-xl shadow-lg border border-crescent-gold/30">
+        <img src="qris.jpeg" alt="Barcode/Dana QR" class="w-36 h-36 object-contain mx-auto" />
+    </div>
+
+    <!-- NOMOR DANA BIASA -->
+    <div class="text-center">
+        <p class="text-sm text-crescent-gold">
+            Atau salin nomor:
+        </p>
+        <div class="flex items-center justify-center gap-3 mt-2">
+            <span class="dana-number text-white text-base font-space-mono tracking-wider" id="danaNumber">
+                081325463214
+            </span>
+            <button class="copy-btn text-xs py-1 px-2" onclick="copyNumber()">
+                Copy
+            </button>
+        </div>
+    </div>
+</div>
+
+                <p style="font-size: 0.9rem; color: var(--text-muted);">Dana only <br> (Pergi ke pasar beli selasih,
+Atas THR-nya, kami ucapkan terima kasih.❤️)</p>
+            </div>
+        </section>
+
+        <!-- UCAPAN -->
+        <section class="reveal" id="section-wishes">
+            <div class="section-header">
+                <h2 class="section-title font-amiri">Ucapan & Doa</h2>
+            </div>
+
+            <div class="glass-box" style="margin-bottom: 2.5rem;">
+                <form id="wishForm">
+                    <input type="text" id="inputName" class="form-input" placeholder="Nama lengkap kamu..." required>
+                    <textarea id="inputText" class="form-input" rows="4" placeholder="Tulis ucapan maaf dan doa terbaikmu di sini... 🌟" required></textarea>
+                    <button type="submit" class="btn-submit">Kirim Ucapan & Doa ✨</button>
+                </form>
+            </div>
+
+            <div id="loading"><div class="spinner"></div></div>
+            <div id="wishesContainer"></div>
+        </section>
+
+        <footer>
+            <p style="margin-bottom: 1rem;">Dibuat dengan penuh cinta dan doa oleh</p>
+            <h3 style="color: var(--crescent-gold); margin: 1rem 0; font-size: 1.5rem; font-weight: 700;">XI PPLG 2 / PIXELG 2</h3>
+            <p style="opacity: 0.8;">Taqabbalallahu minna wa minkum 🌙</p>
+        </footer>
+    </div>
+
+    <script>
+        // ==========================================
+        // 1. KONFIGURASI FIREBASE
+        // ==========================================
+        const firebaseConfig = {
+            apiKey: "AIzaSyB-5VdKj3f8Z2j3h4k5l6m7n8o9p0q1",
+            authDomain: "idul-fitri-pplg2.firebaseapp.com",
+            databaseURL: "https://idul-fitri-pplg2-default-rtdb.firebaseio.com",
+            projectId: "idul-fitri-pplg2",
+            storageBucket: "idul-fitri-pplg2.appspot.com",
+            messagingSenderId: "123456789",
+            appId: "1:123456789:web:abcdef"
+        };
+
+        firebase.initializeApp(firebaseConfig);
+        const database = firebase.database();
+        const wishesRef = database.ref('wishes');
+
+        // ==========================================
+        // 2. LOGIKA BACKGROUND SCROLL
+        // ==========================================
+        const bgImages = document.querySelectorAll('.bg-img');
+        const sections = document.querySelectorAll('section[id]');
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.3 };
+
+        const sectionObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const id = entry.target.id;
+                    let imageIndex = 0;
+                    
+                    if (id === 'section-hero') imageIndex = 0;
+                    else if (id === 'section-message') imageIndex = 1;
+                    else if (id === 'section-thr') imageIndex = 2;
+                    else if (id === 'section-wishes') imageIndex = 3;
+
+                    bgImages.forEach(img => img.classList.remove('active'));
+                    if (bgImages[imageIndex]) bgImages[imageIndex].classList.add('active');
+                }
+            });
+        }, observerOptions);
+
+        sections.forEach(section => sectionObserver.observe(section));
+
+        // ==========================================
+        // 3. GENERATE BULAN KECIL & TECH NODES
+        // ==========================================
+        const nodesContainer = document.getElementById('techNodes');
+        
+        // Bulan kecil mengambang
+        for(let i = 0; i < 15; i++) {
+            const crescent = document.createElement('div');
+            crescent.className = 'floating-crescent';
+            crescent.style.left = Math.random() * 100 + '%';
+            crescent.style.animationDuration = (Math.random() * 15 + 10) + 's';
+            crescent.style.animationDelay = Math.random() * 5 + 's';
+            nodesContainer.appendChild(crescent);
+        }
+        
+        // Tech nodes cyan
+        for(let i = 0; i < 25; i++) {
+            const node = document.createElement('div');
+            node.className = 'node';
+            node.style.left = Math.random() * 100 + '%';
+            const duration = Math.random() * 12 + 8;
+            const delay = Math.random() * 6;
+            node.style.animationDuration = duration + 's';
+            node.style.animationDelay = delay + 's';
+            
+            const size = Math.random() * 3 + 1.5;
+            node.style.width = size + 'px';
+            node.style.height = size + 'px';
+            
+            if (Math.random() > 0.6) {
+                node.style.background = 'var(--crescent-gold)';
+                node.style.boxShadow = '0 0 8px var(--crescent-gold)';
+            }
+            
+            nodesContainer.appendChild(node);
+        }
+
+        // ==========================================
+        // 4. LOGIKA COPY NOMOR PREMIUM
+        // ==========================================
+        function copyNumber() {
+            const number = document.getElementById('danaNumber').innerText;
+            navigator.clipboard.writeText(number).then(() => {
+                showToast();
+            }).catch(err => {
+                prompt("Salin nomor Dana/GoPay/OVO ini:", number);
+            });
+        }
+
+        function showToast() {
+            const toast = document.getElementById('toast');
+            toast.classList.add('show');
+            setTimeout(() => { toast.classList.remove('show'); }, 2500);
+        }
+
+        // ==========================================
+        // 5. LOGIKA FIREBASE UCAPAN
+        // ==========================================
+        const loadingDiv = document.getElementById('loading');
+        const containerDiv = document.getElementById('wishesContainer');
+
+        function renderWish(name, text) {
+            return `<div class="wish-card">
+                <p class="wish-author">🌙 ${escapeHtml(name)}</p>
+                <p class="wish-text">${escapeHtml(text)}</p>
+            </div>`;
+        }
+        
+        function escapeHtml(text) {
+            return text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+        }
+
+        wishesRef.on('value', (snapshot) => {
+            loadingDiv.style.display = 'none';
+            containerDiv.innerHTML = '';
+            const data = snapshot.val();
+            if (data) {
+                const wishesArray = Object.values(data).reverse();
+                wishesArray.forEach(wish => {
+                    containerDiv.innerHTML += renderWish(wish.name, wish.text);
+                });
+            } else {
+                containerDiv.innerHTML = '<p style="text-align:center; opacity:0.7; font-style:italic; padding:2rem; font-size:1.1rem;">🌙 Belum ada ucapan. Jadilah yang pertama mengirimkan doa! ✨</p>';
+            }
+        });
+
+        document.getElementById('wishForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const nameInput = document.getElementById('inputName');
+            const textInput = document.getElementById('inputText');
+            const name = nameInput.value.trim();
+            const text = textInput.value.trim();
+
+            if(name && text) {
+                wishesRef.push({ 
+                    name: name, 
+                    text: text, 
+                    timestamp: Date.now() 
+                }).then(() => { 
+                    this.reset(); 
+                }).catch(error => { 
+                    alert("Gagal mengirim. Cek koneksi & config Firebase."); 
+                    console.error(error); 
+                });
+            }
+        });
+
+        // ==========================================
+        // 6. PARTIKEL BULAN, BINTANG & REVEAL
+        // ==========================================
+        const pContainer = document.getElementById('particles');
+        
+        // Partikel campuran bulan, bintang, & emas
+        for(let i = 0; i < 25; i++) {
+            const p = document.createElement('div');
+            const isStar = Math.random() > 0.6;
+            const isGold = Math.random() > 0.5;
+            
+            if (isStar) {
+                p.className = 'particle star-particle';
+                p.style.background = isGold ? 'var(--crescent-gold)' : '#ffffff';
+            } else {
+                p.className = `particle ${isGold ? 'gold-particle' : ''}`;
+            }
+            
+            const size = Math.random() * 6 + 2;
+            p.style.width = size + 'px';
+            p.style.height = size + 'px';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.animationDuration = (Math.random() * 12 + 12) + 's';
+            p.style.animationDelay = (Math.random() * 6) + 's';
+            pContainer.appendChild(p);
+        }
+
+        const reveals = document.querySelectorAll('.reveal');
+        const revealObserver = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if(entry.isIntersecting) entry.target.classList.add('active');
+            });
+        }, { threshold: 0.1 });
+        reveals.forEach(el => revealObserver.observe(el));
+
+        // ==========================================
+// 7. CONFETTI EFFECT ON BIRTH-BADGE CLICK
+// ==========================================
+document.addEventListener("DOMContentLoaded", () => {
+    const yearBadge = document.getElementById("yearBadge");
+    const confettiContainer = document.getElementById("confettiContainer");
+
+    if (yearBadge && confettiContainer) {
+        yearBadge.addEventListener("click", function (e) {
+            e.preventDefault();
+
+            // Hilangkan confetti lama jika ada
+            confettiContainer.innerHTML = "";
+
+            // Jumlah kepingan confetti
+            const count = 70;
+
+           for (let i = 0; i < count; i++) {
+    const piece = document.createElement("div");
+    piece.classList.add("confetti-piece");
+
+    // Random color
+    const colors = ["#f4d03f", "#ffe066", "#ffffff", "#00f3ff", "#1d4a2c"];
+    piece.style.background = colors[Math.floor(Math.random() * colors.length)];
+
+    // Random horizontal spread (+/- spreadX)
+    const spreadX = Math.random() * 100 - 50; // -50 to +50 pixels
+    piece.style.setProperty('--spread-x', `${spreadX}px`);
+
+    // Position and animation
+    piece.style.left = centerX + "px";
+    piece.style.top = centerY + "px";
+    piece.style.animationDuration = Math.random() * 1.5 + 1 + "s"; // 1-2.5 seconds
+
+    confettiContainer.appendChild(piece);
+}
+        });
+    }
+});
+
+yearBadge.addEventListener("click", function (e) {
+    e.preventDefault();
+
+    // Efek dor kecil
+    this.classList.add("clicked");
+    setTimeout(() => this.classList.remove("clicked"), 300);
+
+    // Lalu jalankan confetti
+    // ... bagian konfetti sama seperti di atas ...
+});
+
+
+    </script>
+</body>
+</html>

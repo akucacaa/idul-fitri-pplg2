@@ -1,0 +1,684 @@
+:root {
+  --bg-base: #050a07;
+  --gold-main: #e6b84a;
+  --gold-light: #f8e4a0;
+  --green-dark: #0a1f13;
+  --green-accent: #1d4a2c;
+  --text-main: #ffffff;
+  --text-muted: #a3b8a9;
+  --tech-cyan: #00f3ff;
+  --crescent-gold: #f4d03f;
+  --crescent-glow: #ffe066;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  font-family: 'Outfit', sans-serif;
+  background-color: var(--bg-base);
+  color: var(--text-main);
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+.font-amiri {
+  font-family: 'Amiri', serif;
+}
+.font-mono {
+  font-family: 'Space Mono', monospace;
+}
+
+/* --- LAMPU GANTUNG & BENTUK NEON PPLG --- */
+.lampu-zone {
+  position: absolute;
+  top: 10%;
+  left: 5%;
+  width: 90%;
+  height: 80px;
+  z-index: 6;
+  pointer-events: none;
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+  gap: 30px;
+  opacity: 0.9;
+}
+
+.lampu-gantung-decor {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+}
+
+.lampu-bulb {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #00f3ff;
+  box-shadow: 0 0 8px #00f3ff, 0 0 15px rgba(0, 243, 255, 0.3);
+  animation: flicker 1.2s ease-in-out infinite alternate;
+}
+
+/* Bentuk kotak LED (like mini monitor) */
+.lampu-box {
+  width: 16px;
+  height: 10px;
+  background: #00f3ff;
+  border-radius: 2px;
+  box-shadow: 0 0 8px #00f3ff, 0 0 15px rgba(0, 243, 255, 0.3);
+  animation: flicker 1.8s ease-in-out infinite alternate;
+}
+
+/* Bentuk bulat besar neon khas */
+.lampu-neon {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: #f4d03f;
+  box-shadow: 0 0 12px #f4d03f, 0 0 20px rgba(244, 208, 63, 0.5);
+  animation: flicker 1.6s ease-in-out infinite alternate;
+}
+
+@keyframes flicker {
+  0% {
+    opacity: 0.7;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.15);
+  }
+  100% {
+    opacity: 0.8;
+    transform: scale(1);
+  }
+}
+
+/* --- BACKGROUND STICKY --- */
+.bg-wrapper {
+  position: fixed;
+  inset: 0;
+  z-index: 0;
+  overflow: hidden;
+}
+
+.bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  opacity: 0;
+  transition: opacity 1.5s ease-in-out;
+  filter: brightness(0.4) blur(1.5px) contrast(1.1);
+}
+
+.bg-img.active {
+  opacity: 1;
+  z-index: 1;
+}
+
+.overlay-gradient {
+  position: fixed;
+  inset: 0;
+  z-index: 2;
+  background: 
+    radial-gradient(circle at 50% 20%, rgba(244, 208, 63, 0.1) 0%, transparent 40%),
+    radial-gradient(circle at 30% 80%, rgba(29, 74, 44, 0.3) 0%, transparent 50%),
+    radial-gradient(circle at 70% 60%, rgba(230, 184, 74, 0.15) 0%, transparent 50%),
+    radial-gradient(circle at 50% 30%, rgba(10, 31, 19, 0.85) 0%, rgba(5, 10, 7, 0.98) 90%);
+  pointer-events: none;
+}
+
+/* --- ORNAMENT TECH PARTICLES + BULAN KECIL --- */
+.tech-nodes {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 4;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.floating-crescent {
+  position: absolute;
+  width: 12px;
+  height: 6px;
+  background: var(--crescent-gold);
+  border-radius: 50% 50% 45% 55% / 60% 60% 40% 40%;
+  opacity: 0.5;
+  animation: floatCrescent linear infinite;
+  filter: drop-shadow(0 0 4px var(--crescent-glow));
+}
+
+.floating-crescent::before {
+  content: '';
+  position: absolute;
+  top: -1px;
+  left: -2px;
+  width: 8px;
+  height: 8px;
+  border: 1px solid var(--crescent-gold);
+  border-radius: 50%;
+  clip-path: polygon(0 0, 100% 0, 100% 100%);
+}
+
+@keyframes floatCrescent {
+  0% {
+    transform: translateY(100vh) rotate(0deg) scale(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-20vh) rotate(360deg) scale(1);
+    opacity: 0;
+  }
+}
+
+.node {
+  position: absolute;
+  width: 4px;
+  height: 4px;
+  background: var(--tech-cyan);
+  border-radius: 50%;
+  box-shadow: 0 0 8px var(--tech-cyan);
+  opacity: 0.5;
+  animation: floatNode linear infinite;
+}
+
+@keyframes floatNode {
+  0% {
+    transform: translateY(100vh) scale(0);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.6;
+  }
+  100% {
+    transform: translateY(-10vh) scale(1);
+    opacity: 0;
+  }
+}
+
+/* --- JUDUL SHINE ISLAMIC --- */
+.title-shine {
+  color: var(--gold-main);
+  background: linear-gradient(45deg, #bf953f, #f4d03f, #e6b84a, #ffe066, #d4ac26);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-size: 300% auto;
+  animation: shineIslamic 6s ease infinite;
+  position: relative;
+  font-size: clamp(2.5rem, 7vw, 4.5rem);
+  text-shadow: 0 0 50px rgba(244, 208, 63, 0.4);
+  margin-bottom: 1.5rem;
+}
+
+.title-shine::after {
+  content: '';
+  position: absolute;
+  bottom: -10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 60px;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, var(--gold-main), transparent);
+}
+
+@keyframes shineIslamic {
+  0%, 100% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+}
+
+/* --- MARQUEE UCAPAN LENGKAP --- */
+.marquee-container {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  width: 100%;
+  background: linear-gradient(90deg, rgba(10, 31, 19, 0.95), rgba(244, 208, 63, 0.15), rgba(10, 31, 19, 0.95));
+  padding: 12px 0;
+  z-index: 20;
+  border-top: 2px solid rgba(244, 208, 63, 0.4);
+  backdrop-filter: blur(8px);
+  overflow: hidden;
+}
+
+.marquee-text {
+  display: inline-block;
+  white-space: nowrap;
+  animation: marquee 25s linear infinite;
+  color: var(--gold-light);
+  font-family: 'Amiri', serif;
+  font-size: 1.2rem;
+  font-weight: 500;
+  text-shadow: 0 0 10px rgba(244, 208, 63, 0.5);
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(100%);
+  }
+  100% {
+    transform: translateX(-100%);
+  }
+}
+
+/* --- KARTU UCAPAN PREMIUM --- */
+.wish-card {
+  background: linear-gradient(145deg, rgba(10, 31, 19, 0.8), rgba(29, 74, 44, 0.6));
+  border-left: 4px solid var(--crescent-gold);
+  padding: 1.5rem;
+  margin-bottom: 1.5rem;
+  border-radius: 0 20px 20px 0;
+  transition: all 0.4s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  position: relative;
+  overflow: hidden;
+}
+
+.wish-card::before {
+  content: '✦';
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  color: var(--crescent-gold);
+  font-size: 1.2rem;
+  opacity: 0.5;
+}
+
+.wish-card:hover {
+  transform: translateY(-8px) scale(1.02);
+  box-shadow: 0 20px 40px rgba(244, 208, 63, 0.2);
+  background: linear-gradient(145deg, rgba(20, 50, 35, 0.9), rgba(44, 90, 62, 0.7));
+  border-left-color: var(--crescent-glow);
+}
+
+/* --- PARTIKEL BULAN & BINTANG --- */
+.particle {
+  position: fixed;
+  pointer-events: none;
+  z-index: 3;
+  border-radius: 50%;
+  opacity: 0;
+  animation: floatUp linear infinite;
+}
+
+.gold-particle {
+  background: var(--crescent-gold);
+}
+
+.star-particle {
+  width: 6px;
+  height: 6px;
+  clip-path: polygon(50% 0%, 61% 35%, 98% 35%, 68% 57%, 79% 91%, 50% 70%, 21% 91%, 32% 57%, 2% 35%, 39% 35%);
+}
+
+@keyframes floatUp {
+  0% {
+    transform: translateY(100vh) scale(0) rotate(0deg);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.9;
+  }
+  100% {
+    transform: translateY(-30vh) scale(1) rotate(720deg);
+    opacity: 0;
+  }
+}
+
+/* --- KONTEN UTAMA --- */
+.main-content {
+  position: relative;
+  z-index: 10;
+  padding-bottom: 70px;
+}
+
+.hero {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  padding: 2rem;
+  position: relative;
+}
+
+.fade-in {
+  opacity: 0;
+  transform: translateY(40px);
+  animation: fadeInUp 1.2s ease forwards;
+}
+
+.delay-1 { animation-delay: 0.4s; }
+.delay-2 { animation-delay: 0.8s; }
+.delay-3 { animation-delay: 1.2s; }
+.delay-4 { animation-delay: 1.6s; }
+
+@keyframes fadeInUp {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.sub-title {
+  font-size: clamp(1.3rem, 3.5vw, 2rem);
+  color: var(--text-main);
+  margin-bottom: 2.5rem;
+  font-weight: 300;
+  text-shadow: 0 0 20px rgba(244, 208, 63, 0.3);
+}
+
+.year-badge {
+  display: inline-block;
+  padding: 1rem 2.5rem;
+  border: 2px solid var(--crescent-gold);
+  color: var(--crescent-gold);
+  border-radius: 50px;
+  font-size: 1.2rem;
+  letter-spacing: 3px;
+  margin-bottom: 2.5rem;
+  background: rgba(244, 208, 63, 0.08);
+  backdrop-filter: blur(10px);
+  font-weight: 500;
+  box-shadow: 0 0 20px rgba(244, 208, 63, 0.2);
+}
+
+.year-badge.clicked {
+  transform: scale(1.15);
+  box-shadow: 0 0 30px rgba(244, 208, 63, 0.8);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.class-title {
+  font-size: clamp(1.8rem, 5vw, 2.5rem);
+  font-weight: 800;
+  color: white;
+  text-transform: uppercase;
+  letter-spacing: 4px;
+  background: linear-gradient(45deg, var(--crescent-gold), white);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+/* --- SECTIONS GENERAL --- */
+section {
+  padding: 6rem 1.5rem;
+  max-width: 1000px;
+  margin: 0 auto;
+}
+
+.section-header {
+  text-align: center;
+  margin-bottom: 4rem;
+}
+
+.section-title {
+  font-size: 2.5rem;
+  color: var(--crescent-gold);
+  display: inline-block;
+  padding-bottom: 15px;
+  border-bottom: 3px solid rgba(244, 208, 63, 0.4);
+  position: relative;
+}
+
+.section-title::after {
+  content: '✦';
+  position: absolute;
+  bottom: -5px;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 1.2rem;
+  opacity: 0.7;
+}
+
+/* --- GLASS BOX GENERAL --- */
+.glass-box {
+  background: rgba(10, 31, 19, 0.7);
+  border: 1px solid rgba(244, 208, 63, 0.25);
+  backdrop-filter: blur(15px);
+  border-radius: 25px;
+  padding: 2.5rem;
+  box-shadow: 0 15px 50px rgba(0, 0, 0, 0.4);
+}
+
+/* --- WISH MESSAGE --- */
+.wish-message {
+  font-size: 1.2rem;
+  line-height: 1.9;
+  color: #f0f0f0;
+  text-align: center;
+}
+
+.gold-text {
+  color: var(--crescent-gold);
+  font-weight: 700;
+  font-size: 1.4rem;
+}
+
+/* --- WISH AUTHOR & TEXT --- */
+.wish-author {
+  color: var(--crescent-glow);
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+}
+
+.wish-text {
+  color: var(--text-muted);
+  font-size: 1rem;
+  line-height: 1.7;
+}
+
+/* --- SPINNER LOADING --- */
+.spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(244, 208, 63, 0.2);
+  border-top-color: var(--crescent-gold);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  margin: 3rem auto;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* --- FOOTER --- */
+footer {
+  text-align: center;
+  padding: 4rem 1rem;
+  border-top: 2px solid rgba(244, 208, 63, 0.1);
+  color: var(--text-muted);
+  font-size: 1rem;
+  background: rgba(10, 31, 19, 0.3);
+  backdrop-filter: blur(10px);
+}
+
+.reveal {
+  opacity: 0;
+  transform: translateY(60px);
+  transition: all 1s ease;
+}
+
+.reveal.active {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* --- CONFETTI BURST UPWARD + SPREAD --- */
+.confetti-piece {
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  opacity: 0.9;
+  animation: confetti-burst 1.8s ease-in-out forwards;
+}
+
+@keyframes confetti-burst {
+  0% {
+    transform: scale(0.5) translateY(0) translateX(0);
+    opacity: 0.5;
+  }
+  20% {
+    transform: scale(1.2) translateY(-100px) translateX(var(--spread-x));
+    opacity: 1;
+  }
+  100% {
+    transform: scale(1) translateY(-160px) translateX(var(--spread-x));
+    opacity: 0;
+  }
+}
+
+/* --- FORM & INPUTS --- */
+.form-input {
+  width: 100%;
+  padding: 1rem;
+  margin-bottom: 1rem;
+  border: 1px solid rgba(244, 208, 63, 0.3);
+  border-radius: 12px;
+  background: rgba(10, 31, 19, 0.6);
+  color: var(--text-main);
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.2);
+}
+
+.btn-submit {
+  background: linear-gradient(45deg, var(--crescent-gold), #ffe066);
+  color: black;
+  padding: 1rem 2rem;
+  border: none;
+  border-radius: 12px;
+  font-weight: 700;
+  letter-spacing: 1px;
+  cursor: pointer;
+  box-shadow: 0 5px 20px rgba(244, 208, 63, 0.4);
+  transition: all 0.3s ease;
+}
+
+.btn-submit:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 30px rgba(244, 208, 63, 0.6);
+}
+
+/* --- COPY BUTTON & TOAST --- */
+.copy-btn {
+  background: var(--crescent-gold);
+  color: black;
+  border-radius: 8px;
+  padding: 0.4rem 0.6rem;
+  box-shadow: 0 2px 10px rgba(244, 208, 63, 0.5);
+  transition: all 0.2s ease;
+}
+
+.copy-btn:hover {
+  transform: scale(1.05);
+}
+
+.toast {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: rgba(10, 31, 19, 0.9);
+  color: #f4d03f;
+  padding: 0.8rem 1.5rem;
+  border-radius: 12px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.5);
+  z-index: 100;
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.toast.show {
+  opacity: 1;
+}
+
+/* --- FOOTER TEXTS --- */
+.footer-text {
+  margin-bottom: 1rem;
+}
+
+.footer-title {
+  color: var(--crescent-gold);
+  margin: 1rem 0;
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+.footer-subtext {
+  opacity: 0.8;
+}
+
+/* --- THR SECTION STYLING --- */
+.rolling-wishes p {
+  margin: 0.4rem 0;
+  font-size: 1.1rem;
+  text-align: center;
+}
+
+.thr-title {
+  font-size: 1.6rem;
+  color: var(--crescent-gold);
+  margin: 1.5rem 0 0.5rem 0;
+  font-weight: 700;
+}
+
+.thr-subtitle {
+  font-size: 1rem;
+  color: var(--text-muted);
+  margin-bottom: 1rem;
+}
+
+.thr-note {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  text-align: center;
+}
+
+/* --- MONO TEXT --- */
+.mono-text,
+.mono-label {
+  font-family: 'Space Mono', monospace;
+}
+
+/* --- WISH FORM --- */
+.wishes-form {
+  margin-bottom: 2.5rem;
+}
+
+/* --- CONFETTI CONTAINER --- */
+.confetti-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100vh;
+  pointer-events: none;
+  z-index: 21;
+}
